@@ -4,10 +4,11 @@ RUN yum -y install gcc make patch && \
     tar xfz v${tgtver:-1.0.62}.tar.gz && \
     cd tgt-${tgtver:-1.0.62} && \
     curl https://raw.githubusercontent.com/wtnb75/docker-stgt/master/stgt.patch | patch -p1 && \
-    make install-programs && \
+    make install-programs install-scripts && \
     cd - && \
     rm -rf v${tgtver:-1.0.62}.tar.gz v${tgtver:-1.0.62} && \
     yum remove -y $(awk '/Installed/{print $NF;}' /var/log/yum.log) && \
+    yum -y install libiscsi libiscsi-utils && \
     yum clean all
 EXPOSE 3260
 ENTRYPOINT ["tgtd","-f"]
